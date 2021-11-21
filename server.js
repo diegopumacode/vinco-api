@@ -4,9 +4,8 @@ const cors = require('cors')
 const sqlite3 = require('sqlite3').verbose();
 
 const app = express()
-const db = new sqlite3.Database('./database/users.db');
+const db = require("./db.config.js")
 
-db.run('CREATE TABLE IF NOT EXISTS user(id TEXT, name TEXT, lastName TEXT, occupation TEXT, age INTEGER, status INTEGER)');
 
 let corsOptions = {
     origin: 'http://localhost:3000'
@@ -23,7 +22,33 @@ app.get('/', (req, res) => {
     res.send("API running /_(--)_/")
 })
 
+app.get("/user", (req, res, next) => {
+    db.get(`SELECT * FROM users`, [], (err, row) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        res.status(200).json({ ok: true, data: row || [] });
+    });
+});
+
+app.post("/user/", (req, res, next) => {
+    var reqBody = req.body;
+    db.run(`INSERT INTO users(lastName, firstName, occupation, age, status) VALUES (?,?,?,?,?)`,
+        [reqBody.lastName, reqBody.firstName, reqBody.occupation, reqBody.status,reqBody.age],
+        function (err, result) {
+            if (err) {
+                res.status(400).json({ "error": err.message })
+                return;
+            }
+            res.status(201).json({
+                "id": this.lastID
+            })
+        });
+});
+
 const PORT = process.env.PORT || 8080
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
 });
+

@@ -31,7 +31,7 @@ app.get("/user", (req, res, next) => {
         rows.forEach(function (row) {  
             data.push(row)
         }) 
-        res.status(200).send({ ok: true, data: data || [] });
+        res.status(200).send(data || []);
     });
 });
 
@@ -45,7 +45,7 @@ app.get("/user/:id", (req, res, next) => {
             res.status(404).json({ ok: false });
             return;
         }
-        res.json({ ok: true, data: row });
+        res.json(row);
     });
 });
 
@@ -59,7 +59,6 @@ app.post("/user/", (req, res, next) => {
                 return;
             }
             res.status(201).json({
-                data: true,
                 id: this.lastID
             })
         });

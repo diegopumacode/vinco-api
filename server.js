@@ -22,12 +22,16 @@ app.get('/', (req, res) => {
 })
 
 app.get("/user", (req, res, next) => {
-    db.get(`SELECT * FROM users`, [], (err, row) => {
+    db.all(`SELECT * FROM users`, (err, rows) => {
         if (err) {
             res.status(400).json({ "error": err.message });
             return;
         }
-        res.status(200).json({ ok: true, data: row || [] });
+        let data = []
+        rows.forEach(function (row) {  
+            data.push(row)
+        }) 
+        res.status(200).send({ ok: true, data: data || [] });
     });
 });
 

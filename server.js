@@ -21,6 +21,7 @@ app.get('/', (req, res) => {
     res.send("API running /_(--)_/")
 })
 
+// Get All users
 app.get("/user", (req, res, next) => {
     db.all(`SELECT * FROM users`, (err, rows) => {
         if (err) {
@@ -35,6 +36,7 @@ app.get("/user", (req, res, next) => {
     });
 });
 
+// Get user by id
 app.get("/user/:id", (req, res, next) => {
     db.get(`SELECT * FROM users where id=?`, [req.params.id], (err, row) => {
         if (err) {
@@ -49,6 +51,7 @@ app.get("/user/:id", (req, res, next) => {
     });
 });
 
+// Create User
 app.post("/user/", (req, res, next) => {
     let reqBody = req.body;
     db.run(`INSERT INTO users(lastName, firstName, occupation, age, status) VALUES (?,?,?,?,?)`,
@@ -64,6 +67,7 @@ app.post("/user/", (req, res, next) => {
         });
 });
 
+// Update user
 app.put('/user/:id', function (req, res) {
     let { lastName, firstName, occupation, age, status } = req.body;
     db.serialize(() => {
@@ -78,6 +82,7 @@ app.put('/user/:id', function (req, res) {
     });
 });
 
+// Delete user
 app.delete('/user/:id', function (req, res) {
     db.serialize(() => {
         db.run('UPDATE users SET status=false WHERE id = ?',
@@ -91,6 +96,7 @@ app.delete('/user/:id', function (req, res) {
     });
 });
 
+// Activate user
 app.put('/user/:id/active', function (req, res) {
     db.serialize(() => {
         db.run('UPDATE users SET status=true WHERE id = ?',

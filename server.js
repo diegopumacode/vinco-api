@@ -7,7 +7,7 @@ const app = express()
 const db = require("./db.config.js")
 
 let corsOptions = {
-    origin: 'http://localhost:3000'
+    origin: 'https://vinco-front.vercel.app'
 }
 
 app.use(cors(corsOptions))

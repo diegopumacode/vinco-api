@@ -37,11 +37,11 @@ app.get("/user/:id", (req, res, next) => {
             res.status(400).json({ "error": err.message });
             return;
         }
-        if(!row){
-            res.status(404).json({ ok: false});
+        if (!row) {
+            res.status(404).json({ ok: false });
             return;
         }
-        res.json({ ok: true, data: row});
+        res.json({ ok: true, data: row });
     });
 });
 
@@ -62,10 +62,10 @@ app.post("/user/", (req, res, next) => {
 });
 
 app.put('/user/:id', function (req, res) {
-    let { lastName, firstName, occupation, age } = req.body;
+    let { lastName, firstName, occupation, age, status } = req.body;
     db.serialize(() => {
-        db.run('UPDATE users SET lastName=? , firstName=? , occupation=? , age = ? WHERE id = ?',
-            [lastName, firstName, occupation, age, req.params.id], function (err) {
+        db.run('UPDATE users SET lastName=? , firstName=? , occupation=? , age = ?, status = ? WHERE id = ?',
+            [lastName, firstName, occupation, age, status, req.params.id], function (err) {
                 if (err) {
                     res.send("Error while updating");
                     return console.error(err.message);
@@ -75,6 +75,18 @@ app.put('/user/:id', function (req, res) {
     });
 });
 
+app.delete('/user/:id', function (req, res) {
+    db.serialize(() => {
+        db.run('UPDATE users SET status=false WHERE id = ?',
+            [req.params.id], function (err) {
+                if (err) {
+                    res.send("Error while deleting");
+                    return console.error(err.message);
+                }
+                res.send({ ok: true, message: "Entry delete successfully" });
+            });
+    });
+});
 
 const PORT = process.env.PORT || 8080
 app.listen(PORT, () => {

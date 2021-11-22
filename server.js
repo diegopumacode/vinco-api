@@ -31,6 +31,20 @@ app.get("/user", (req, res, next) => {
     });
 });
 
+app.get("/user/:id", (req, res, next) => {
+    db.get(`SELECT * FROM users where id=?`, [req.params.id], (err, row) => {
+        if (err) {
+            res.status(400).json({ "error": err.message });
+            return;
+        }
+        if(!row){
+            res.status(404).json({ ok: false});
+            return;
+        }
+        res.json({ ok: true, data: row});
+    });
+});
+
 app.post("/user/", (req, res, next) => {
     let reqBody = req.body;
     db.run(`INSERT INTO users(lastName, firstName, occupation, age, status) VALUES (?,?,?,?,?)`,

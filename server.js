@@ -91,6 +91,19 @@ app.delete('/user/:id', function (req, res) {
     });
 });
 
+app.put('/user/:id/active', function (req, res) {
+    db.serialize(() => {
+        db.run('UPDATE users SET status=true WHERE id = ?',
+            [req.params.id], function (err) {
+                if (err) {
+                    res.send("Error while deleting");
+                    return console.error(err.message);
+                }
+                res.send({ ok: true, message: "Entry delete successfully" });
+            });
+    });
+});
+
 const PORT = process.env.PORT || 8080
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);

@@ -28,9 +28,9 @@ app.get("/user", (req, res, next) => {
             return;
         }
         let data = []
-        rows.forEach(function (row) {  
+        rows.forEach(function (row) {
             data.push(row)
-        }) 
+        })
         res.status(200).send(data || []);
     });
 });
@@ -52,7 +52,7 @@ app.get("/user/:id", (req, res, next) => {
 app.post("/user/", (req, res, next) => {
     let reqBody = req.body;
     db.run(`INSERT INTO users(lastName, firstName, occupation, age, status) VALUES (?,?,?,?,?)`,
-        [reqBody.lastName, reqBody.firstName, reqBody.occupation, reqBody.status, reqBody.age],
+        [reqBody.lastName, reqBody.firstName, reqBody.occupation, reqBody.age, 1],
         function (err, result) {
             if (err) {
                 res.status(400).json({ "error": err.message })

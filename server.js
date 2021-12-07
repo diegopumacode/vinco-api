@@ -44,7 +44,7 @@ app.get("/user/:id", (req, res, next) => {
             return;
         }
         if (!row) {
-            res.status(404).json({ ok: false });
+            res.json([]);
             return;
         }
         res.json(row);
